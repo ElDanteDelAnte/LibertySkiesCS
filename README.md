@@ -1,2 +1,2 @@
-# LibertySkiesGDX
-Developing the Liberty Skies game in the libGDX framework.
+# LibertySkiesCS
+The C# scripts for Liberty Skies built in Unity.
