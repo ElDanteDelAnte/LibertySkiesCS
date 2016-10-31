@@ -10,7 +10,7 @@ public class Character
     //base stats
     public enum Stats
     {
-        MIGHT, ENDURANCE, WIT, SPIRIT, AGILITY, SPEED, VITALITY
+        VITALITY, MIGHT, WIT, SPIRIT, AGILITY
     }
 
     public int[] baseStats = new int[Enum.GetNames(typeof(Stats)).Length];
@@ -19,9 +19,9 @@ public class Character
     public enum Skills
     {
         SWORDS, GUNS, ARCHERY, SPEARS, AXES, BLUNTS, STAVES, UNARMED,                   //weapon skills
-        MMAGIC, BMAGIC, FMAGIC, TMAGIC,         //magic skills
-        MEDICINE, STEALTH, SPEECH, TECH,     //utility skills
-        CRAFTING, FARMING, MINING                         //gathering skills
+        MMAGIC, BMAGIC, FMAGIC, TMAGIC,                                                 //magic skills
+        MEDICINE, STEALTH, SPEECH, TECH, SURVIVAL,                                      //utility skills
+        CRAFTING, FARMING, MINING                                                       //gathering skills
     }
 
 
@@ -55,6 +55,12 @@ public class Character
     /// <param name="ally">Whether the character is friendly to the party.</param>
     public Character(int[] stats, int[] skills, SpriteSet sprset /*, race*/, bool ally)
     {
+        //assert
+        if (stats.Length != baseStats.Length)
+            Debug.Log("Stat array incorrect size!");
+        if (skills.Length != skillLVS.Length)
+            Debug.Log("Skill array incorrect size!");
+        
         //init stats
         for (int i = 0; i < baseStats.Length; i++)
             baseStats[i] = stats[i];

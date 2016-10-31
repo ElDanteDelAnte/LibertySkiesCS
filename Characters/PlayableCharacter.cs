@@ -37,7 +37,7 @@ public class PlayableCharacter : Character
     //out-of-combat dialogues
 
     //position in ranks
-    public Battler.BattlePositions pos;
+    public BattleManager.BattlePositions pos;
 
     //save
 

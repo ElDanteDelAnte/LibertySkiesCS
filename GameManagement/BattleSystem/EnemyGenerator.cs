@@ -5,10 +5,12 @@ using System.Collections.Generic;
 /// <summary>
 /// Creates an enemy from a set of parameters that scales to the player's level.
 /// </summary>
+[CreateAssetMenu(fileName = "enemy", menuName = "Character/Enemy", order = 3)]
 public class EnemyGenerator : ScriptableObject
 {
     public List<SpriteSet> spritepool;
     public CreatureRace race;
+    public BattleManager.BattlePositions pos;
     //AI
     //inventory
     //base stats
@@ -20,7 +22,7 @@ public class EnemyGenerator : ScriptableObject
     /// </summary>
     /// <param name="location">Enemy's "home" position on the screen.</param>
     /// <returns>Combatant-configured Battler copy.</returns>
-    public Battler generate(Vector3 location /*, scaleFactor */)
+    public void generate(Vector3 location /*, scaleFactor */)
     {
         //select spriteset from pool
         SpriteSet sprt = spritepool[0];
@@ -34,11 +36,9 @@ public class EnemyGenerator : ScriptableObject
         //race
         //attach weapon
         //known abilities
-        Battler enBatSpr = enemy.Sprites.battleSprite;
-        Battler batCopy = Instantiate(enBatSpr, location, Quaternion.identity) as Battler;
 
-        batCopy.combatant = enemy;
-        return batCopy;
+
+        BattleManager.inst.spawnEnemy(enemy, location);
     }
 	
 }

@@ -31,10 +31,19 @@ public abstract class BattleAction
     /// </summary>
     public void act()
     {
+        //soft-pause battle progression (not all cases)
         //deduct stam/mana/etc. cost from user
 
         //do damage/heal damage/etc.
+        //resume battle progression
     }
 
-    
+    /// <summary>
+    /// Checks to see if the conditions to use the condition are met.
+    /// </summary>
+    /// <returns>True if the action is valid, false otherwise.</returns>
+    public bool isValid()
+    {
+        return true;
+    }
 }

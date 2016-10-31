@@ -14,29 +14,20 @@ public class Battler : MonoBehaviour
     private bool allied;
     public bool Allied {  get { return allied; } }
     
-    //which row the combatant is in
-    public enum BattlePositions
-    {
-        FRONT, BACK, AIR
-    }
+    
 
-    public BattlePositions pos;
+    public BattleManager.BattlePositions pos;
 
     public Character combatant;     //Must be set after Initialize()!
 
     //battle stats; must be set after Initialize()/Awake()!
-    int ATBmax;
-    int ATBcount = 0;
+    public int ATBmax;
+    public int ATBcount;
 
-    int hp;
-    int hp_max;
-    int stam;
-    int stam_max;
-    int focus;
-    int focus_max;
+    public int barrier;
 
 
-    //displays and meters
+    public BattleAction intendedAction;
 
     //Initialize battle stats
     void Start()
@@ -45,12 +36,28 @@ public class Battler : MonoBehaviour
         homePos = transform.position;   //set "home" position to initial position
     }
 
-    //tick
-    public void tick()
+    /// <summary>
+    /// Increments ATB and all passive effects if able.
+    /// </summary>
+    /// <returns>True if the combatant is ready and able to take an action.</returns>
+    public bool tick()
     {
+        bool able = true;
         //check, bump ATB
         //check, bump stam
         //inc buffs
         //passive effects
+        return able && ATBcount > ATBmax;
     }
+
+    /// <summary>
+    /// The battler determines their next action based on AI or player control.
+    /// </summary>
+    /// <returns>The combatant's next intended action.</returns>
+    public BattleAction nextAction()
+    {
+        return null;
+    }
+
+    //post-battle operations
 }

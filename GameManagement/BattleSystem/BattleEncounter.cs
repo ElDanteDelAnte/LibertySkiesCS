@@ -10,6 +10,8 @@ public class BattleEncounter : ScriptableObject
     public Battler[] backRow;
     public Battler[] airborne;
 
+    public EncGroupGenerator[] groups;
+
     //public List<enemyPlacement> enemyTeam;
 
     /// <summary>
@@ -41,7 +43,7 @@ public class BattleEncounter : ScriptableObject
             {
                 
                 enemy = Instantiate(frontRow[i], placement, Quaternion.identity) as Battler;
-                enemy.pos = Battler.BattlePositions.FRONT;
+                enemy.pos = BattleManager.BattlePositions.FRONT;
                 enemies.Add(enemy);
             }
         }
@@ -58,7 +60,7 @@ public class BattleEncounter : ScriptableObject
             if (backRow[j] != null)
             {
                 enemy = Instantiate(backRow[j], placement, Quaternion.identity) as Battler;
-                enemy.pos = Battler.BattlePositions.BACK;
+                enemy.pos = BattleManager.BattlePositions.BACK;
                 enemies.Add(enemy);
             }
         }
@@ -76,7 +78,7 @@ public class BattleEncounter : ScriptableObject
             if (airborne[k] != null)
             {
                 enemy = Instantiate(airborne[k], placement, Quaternion.identity) as Battler;
-                enemy.pos = Battler.BattlePositions.AIR;
+                enemy.pos = BattleManager.BattlePositions.AIR;
                 enemies.Add(enemy);
             }
         }
@@ -112,26 +114,26 @@ public class BattleEncounter : ScriptableObject
 
         foreach (PlayableCharacter ally in party)
         {
-            Battler sprite = ally.Sprites.battleSprite as Battler;
+            GameObject sprite = ally.Sprites.battleSprite;
             Battler copy;
 
             switch (ally.pos)
             {
-                case Battler.BattlePositions.FRONT:
+                case BattleManager.BattlePositions.FRONT:
                     copy = Instantiate(sprite, frontPlacement, Quaternion.identity) as Battler;
                     frontPlacement.z += 5;      //set placement
                     copy.pos = ally.pos;        //set position
                     copy.combatant = ally;      //set combatant
                     allies.Add(copy);           //add to list
                     break;
-                case Battler.BattlePositions.BACK:
+                case BattleManager.BattlePositions.BACK:
                     copy = Instantiate(sprite, backPlacement, Quaternion.identity) as Battler;
                     backPlacement.z += 5;       //set placement
                     copy.pos = ally.pos;        //set position
                     copy.combatant = ally;      //set combatant
                     allies.Add(copy);           //add to list
                     break;
-                case Battler.BattlePositions.AIR:
+                case BattleManager.BattlePositions.AIR:
                     copy = Instantiate(sprite, airPlacement, Quaternion.identity) as Battler;
                     airPlacement.z += 7;        //set placemnt
                     copy.pos = ally.pos;        //set position

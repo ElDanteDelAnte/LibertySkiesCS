@@ -6,6 +6,5 @@ public class SpriteSet : ScriptableObject
 {
     //talksprite
 
-    //battle sprite prefab
-    public Battler battleSprite;
+    public GameObject battleSprite;
 }
