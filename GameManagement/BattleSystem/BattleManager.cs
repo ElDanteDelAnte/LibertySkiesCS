@@ -46,6 +46,10 @@ public class BattleManager : MonoBehaviour
     private List<Battler> enemyTeam = new List<Battler>();
     private List<Battler> playerTeam = new List<Battler>();
     private List<Battler> combatants = new List<Battler>();
+
+    public List<Battler> EnemyTeam { get { return enemyTeam; } }
+    public List<Battler> PlayerTeam { get { return playerTeam; } }
+    public List<Battler> Combatants { get { return combatants; } }
     
     //battle flow control fields
     private bool playerPaused = false;
