@@ -25,6 +25,9 @@ public class Character
     }
 
 
+    private string name;
+    public string Name { get { return name; } }
+
     //Levels for each skill. Array is exactly as long as the number of skills
     public int[] skillLVS = new int[Enum.GetNames(typeof(Skills)).Length];
 
@@ -39,27 +42,32 @@ public class Character
     //known abilities
 
     //spriteset
-    protected SpriteSet sprites;
+    private SpriteSet sprites;
     public SpriteSet Sprites { get { return sprites; } }
 
     //dialogues
 
     //default AI
 
+    public BattleManager.BattlePositions pos;
     
     /// <summary>
     /// Creates a character from a set of base stats and skills.
     /// </summary>
+    /// <param name="name">Character's name.</param>
     /// <param name="stats">Character's base stats.</param>
     /// <param name="skills">Character's starting skill levels.</param>
     /// <param name="ally">Whether the character is friendly to the party.</param>
-    public Character(int[] stats, int[] skills, SpriteSet sprset /*, race*/, bool ally)
+    public Character(string name, int[] stats, int[] skills, SpriteSet sprset /*, race*/,
+        bool ally, BattleManager.BattlePositions posit)
     {
         //assert
         if (stats.Length != baseStats.Length)
             Debug.Log("Stat array incorrect size!");
         if (skills.Length != skillLVS.Length)
             Debug.Log("Skill array incorrect size!");
+
+        this.name = name;
         
         //init stats
         for (int i = 0; i < baseStats.Length; i++)
@@ -74,6 +82,9 @@ public class Character
 
         //set team
         this.allied = ally;
+
+        //set position
+        this.pos = posit;
     }
 
     /// <summary>
@@ -82,7 +93,7 @@ public class Character
     /// <returns>Playable version of this character.</returns>
     public PlayableCharacter toPlayable()
     {
-        return new PlayableCharacter(this.baseStats, this.skillLVS, this.sprites);
+        return new PlayableCharacter(this.name, this.baseStats, this.skillLVS, this.sprites, this.pos);
     }
 
     

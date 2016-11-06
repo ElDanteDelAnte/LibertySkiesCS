@@ -6,7 +6,8 @@ public class BattleManager : MonoBehaviour
     //singleton
     public static BattleManager inst;
 
-    public BattleEncounter encounter;   //the encounter for this instance of the scene
+    private BattleEncounter encounter;   //quick reference to GameManager's encounter
+    private int batCount;
 
     //which row the combatant is in
     public enum BattlePositions
@@ -16,20 +17,23 @@ public class BattleManager : MonoBehaviour
 
     void Awake()
     {
-        inst = this;
-        //encounter = GameManager.inst.encounter;
+        inst = this;                                //MUST HAPPEN FIRST
+        encounter = GameManager.inst.encounter;
+        batCount = 0;
 
         //spawn enemies
-        enemyTeam = encounter.spawnEnemies();
+        encounter.spawnEnemies();
 
         //spawn party
-        playerTeam = encounter.spawnParty();
+        encounter.spawnParty();
 
         //combine teams
+        /*
         foreach (Battler enm in enemyTeam)
             combatants.Add(enm);
         foreach (Battler prt in playerTeam)
             combatants.Add(prt);
+        */
     }
     
     
@@ -56,19 +60,23 @@ public class BattleManager : MonoBehaviour
     /// </summary>
     /// <param name="comb">The combatant to spawn.</param>
     /// <param name="location">The spot on the battlefield to spawn the enemy.</param>
-    public void spawnEnemy(Character comb, Vector3 location)
+    public void spawnCombatant(Character comb, Vector3 location)
     {
-        GameObject sprite = comb.Sprites.battleSprite;                                         //get sprite
+        GameObject sprite = comb.Sprites.battleSprite;                                          //get sprite
         GameObject copy = Instantiate(sprite, location, Quaternion.identity) as GameObject;     //spawn enemy
 
         //add components
-        Battler batSpr = copy.AddComponent<Battler>() as Battler;
-        batSpr.combatant = comb;
-        //sprite.addComponent<>();
+        Battler batSpr = copy.AddComponent<Battler>() as Battler;                               //add Battler
+        batSpr.combatant = comb;                                                                //set Battler combatant
+        batSpr.batID = batCount++;                                                              //set batID
+        //sprite.addComponent<StatReader>();
 
         //add to team lists
         if (comb.Allied)
+        {
+            //batSpr.AddComponent<AggroDisplay>();
             playerTeam.Add(batSpr);
+        }
         else
             enemyTeam.Add(batSpr);
 
@@ -101,6 +109,10 @@ public class BattleManager : MonoBehaviour
         foreach (Battler bat in combatants)
         {
             bool ready = bat.tick();
+
+            if (bat.intendedAction == null)
+                bat.intendedAction = bat.nextAction();
+            
             bool able = (bat.intendedAction != null && bat.intendedAction.isValid());
 
             if (able)
@@ -116,6 +128,7 @@ public class BattleManager : MonoBehaviour
                 //determine next action
                 bat.intendedAction = bat.nextAction();
             }
+            
         }
     }
     

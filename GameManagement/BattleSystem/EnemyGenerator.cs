@@ -8,6 +8,7 @@ using System.Collections.Generic;
 [CreateAssetMenu(fileName = "enemy", menuName = "Character/Enemy", order = 3)]
 public class EnemyGenerator : ScriptableObject
 {
+    public string enemyName;
     public List<SpriteSet> spritepool;
     public CreatureRace race;
     public BattleManager.BattlePositions pos;
@@ -31,14 +32,14 @@ public class EnemyGenerator : ScriptableObject
         //scale to level
         int[] finalStats = baseStats;   
         int[] finalSkills = baseSkills;
-        
-        Character enemy = new Character(finalStats, finalSkills, sprt /* race */, false);
+
+        Character enemy = new Character(enemyName, finalStats, finalSkills, sprt /* race */, false, pos);
         //race
         //attach weapon
         //known abilities
 
 
-        BattleManager.inst.spawnEnemy(enemy, location);
+        BattleManager.inst.spawnCombatant(enemy, location);
     }
 	
 }

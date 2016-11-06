@@ -10,9 +10,10 @@ public class Battler : MonoBehaviour
     private Vector3 homePos;
     public Vector3 HomePos { get { return homePos; } }
 
+    public int batID;       //ID of the Battler
+
     //which team
-    private bool allied;
-    public bool Allied {  get { return allied; } }
+    public bool allied;
     
     
 
@@ -32,8 +33,9 @@ public class Battler : MonoBehaviour
     //Initialize battle stats
     void Start()
     {
-        this.allied = combatant.Allied; //set to corresponding team
+        this.allied = combatant.Allied; //set to corresponding team, possibly redundant
         homePos = transform.position;   //set "home" position to initial position
+        this.pos = combatant.pos;       //set position, possibly redundant
     }
 
     /// <summary>
@@ -56,6 +58,15 @@ public class Battler : MonoBehaviour
     /// <returns>The combatant's next intended action.</returns>
     public BattleAction nextAction()
     {
+        /* TEST AI */
+        if (allied)     //for Kami
+        {
+
+        }
+        else            //for enemies
+        {
+            
+        }
         return null;
     }
 

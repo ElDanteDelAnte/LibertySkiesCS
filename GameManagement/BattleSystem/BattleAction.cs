@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 public abstract class BattleAction
 {
-    private Battler user;
-    private List<Battler> targets;
+    protected Battler user;
+    protected List<Battler> targets;
 
     /// <summary>
     /// Constructor for targetless action.
@@ -29,13 +29,23 @@ public abstract class BattleAction
     /// <summary>
     /// Causes the action to take effect.
     /// </summary>
-    public void act()
-    {
+    public abstract void act();
+    
         //soft-pause battle progression (not all cases)
         //deduct stam/mana/etc. cost from user
 
         //do damage/heal damage/etc.
         //resume battle progression
+    
+
+    /// <summary>
+    /// Obtains a list of valid targets for the action for the Battler to select from.
+    /// </summary>
+    /// <param name="allied">Whether the would-be user is on the player's team.</param>
+    /// <returns>Valid targets.</returns>
+    public static List<Battler> getValidTargets(bool allied)
+    {
+        return new List<Battler>();
     }
 
     /// <summary>

@@ -36,8 +36,6 @@ public class PlayableCharacter : Character
 
     //out-of-combat dialogues
 
-    //position in ranks
-    public BattleManager.BattlePositions pos;
 
     //save
 
@@ -49,7 +47,7 @@ public class PlayableCharacter : Character
     /// <param name="stats">Base stat set.</param>
     /// <param name="skills">Character's starting levels.</param>
     /// <param name="sprite">Character's sprite set.</param>
-    public PlayableCharacter(int[] stats, int[] skills, SpriteSet sprite) : base(stats, skills, sprite, true)
+    public PlayableCharacter(string name, int[] stats, int[] skills, SpriteSet sprite, BattleManager.BattlePositions pos) : base(name, stats, skills, sprite, true, pos)
     {
         //TODO: Set TNLs!
     }
@@ -65,7 +63,7 @@ public class PlayableCharacter : Character
     /// <returns>Enemy version of this playable character.</returns>
     public Character convToEnemy()
     {
-        return new Character(this.baseStats, this.skillLVS, this.sprites, false);
+        return new Character(this.Name, this.baseStats, this.skillLVS, this.Sprites, false, this.pos);
     }
 
 }
