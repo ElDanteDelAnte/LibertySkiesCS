@@ -12,12 +12,9 @@ public class TestAttackAction : BattleAction
     /// </summary>
     public override void act()
     {
-        //soft-pause battle progression (not all cases)
-        //deduct stam/mana/etc. cost from user
+        Battler targ = targets[0];
 
-        //display readout
-
-        //do damage/heal damage/etc.
-        //resume battle progression
+        string readout = user.combatant.CharName + " (" + user.batID + ") attacks " + targ.combatant.CharName + " (" + targ.batID + ").";
+        Debug.Log(readout);
     }
 }

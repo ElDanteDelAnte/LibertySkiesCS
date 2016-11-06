@@ -119,7 +119,7 @@ public class BattleManager : MonoBehaviour
             {
                 if (ready)
                 {
-                    bat.intendedAction.act();                   //perform action
+                    runAction(bat.intendedAction);              //perform action
                     bat.intendedAction = bat.nextAction();      //determine next action
                 }
             }
@@ -131,7 +131,23 @@ public class BattleManager : MonoBehaviour
             
         }
     }
-    
+
+    /// <summary>
+    /// Performs a Battler's action.
+    /// </summary>
+    private void runAction(BattleAction action)
+    {
+        actionInterrupt = true;     //soft pause
+
+        Debug.Log(action.User + "'s turn.");
+
+        //deduct cost from user
+
+        action.act();               //perform action
+
+        actionInterrupt = false;    //resume
+    }
+
     /// <summary>
     /// Toggles the pause button.
     /// </summary>

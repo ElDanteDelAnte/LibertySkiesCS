@@ -25,8 +25,8 @@ public class Character
     }
 
 
-    private string name;
-    public string Name { get { return name; } }
+    private string charName;
+    public string CharName { get { return charName; } }
 
     //Levels for each skill. Array is exactly as long as the number of skills
     public int[] skillLVS = new int[Enum.GetNames(typeof(Skills)).Length];
@@ -67,7 +67,7 @@ public class Character
         if (skills.Length != skillLVS.Length)
             Debug.Log("Skill array incorrect size!");
 
-        this.name = name;
+        this.charName = name;
         
         //init stats
         for (int i = 0; i < baseStats.Length; i++)
@@ -93,7 +93,7 @@ public class Character
     /// <returns>Playable version of this character.</returns>
     public PlayableCharacter toPlayable()
     {
-        return new PlayableCharacter(this.name, this.baseStats, this.skillLVS, this.sprites, this.pos);
+        return new PlayableCharacter(this.charName, this.baseStats, this.skillLVS, this.sprites, this.pos);
     }
 
     

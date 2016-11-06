@@ -4,7 +4,6 @@ using System;
 
 public class TestHealAction : BattleAction
 {
-    
     public TestHealAction(Battler user) : base(user)   { }
     public TestHealAction(Battler user, List<Battler> targets) : base(user, targets)    { }
 
@@ -13,12 +12,10 @@ public class TestHealAction : BattleAction
     /// </summary>
     public override void act()
     {
-        //soft-pause battle progression (not all cases)
-        //deduct stam/mana/etc. cost from user
+        Battler targ = targets[0];
 
-        //display readout
+        string readout = user.combatant.CharName + " (" + user.batID + ") heals " + targ.combatant.CharName + " (" + targ.batID + ").";
+        Debug.Log(readout);
 
-        //do damage/heal damage/etc.
-        //resume battle progression
     }
 }

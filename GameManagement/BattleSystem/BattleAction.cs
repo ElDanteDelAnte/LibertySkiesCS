@@ -6,6 +6,8 @@ public abstract class BattleAction
     protected Battler user;
     protected List<Battler> targets;
 
+    public Battler User { get { return user; } }
+
     /// <summary>
     /// Constructor for targetless action.
     /// </summary>
@@ -30,12 +32,6 @@ public abstract class BattleAction
     /// Causes the action to take effect.
     /// </summary>
     public abstract void act();
-    
-        //soft-pause battle progression (not all cases)
-        //deduct stam/mana/etc. cost from user
-
-        //do damage/heal damage/etc.
-        //resume battle progression
     
 
     /// <summary>
