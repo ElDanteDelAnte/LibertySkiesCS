@@ -9,6 +9,8 @@ public class BattleManager : MonoBehaviour
     private BattleEncounter encounter;   //quick reference to GameManager's encounter
     private int batCount;
 
+    public bool testing;                //so I can see important data like framerates
+
     //which row the combatant is in
     public enum BattlePositions
     {
@@ -22,9 +24,11 @@ public class BattleManager : MonoBehaviour
         batCount = 0;
 
         //spawn enemies
+        Debug.Log("Spawning Enemies");
         encounter.spawnEnemies();
 
         //spawn party
+        Debug.Log("Spawning Party");
         encounter.spawnParty();
 
         //combine teams
@@ -39,8 +43,8 @@ public class BattleManager : MonoBehaviour
     
 
     //team divisions
-    private List<Battler> enemyTeam;
-    private List<Battler> playerTeam;
+    private List<Battler> enemyTeam = new List<Battler>();
+    private List<Battler> playerTeam = new List<Battler>();
     private List<Battler> combatants = new List<Battler>();
     
     //battle flow control fields
@@ -65,8 +69,9 @@ public class BattleManager : MonoBehaviour
         GameObject sprite = comb.Sprites.battleSprite;                                          //get sprite
         GameObject copy = Instantiate(sprite, location, Quaternion.identity) as GameObject;     //spawn enemy
 
+
         //add components
-        Battler batSpr = copy.AddComponent<Battler>() as Battler;                               //add Battler
+        Battler batSpr = copy.AddComponent<Battler>();                                          //add Battler
         batSpr.combatant = comb;                                                                //set Battler combatant
         batSpr.batID = batCount++;                                                              //set batID
         //sprite.addComponent<StatReader>();
@@ -74,11 +79,15 @@ public class BattleManager : MonoBehaviour
         //add to team lists
         if (comb.Allied)
         {
+            Debug.Log("Ally Spawned");
             //batSpr.AddComponent<AggroDisplay>();
             playerTeam.Add(batSpr);
         }
         else
+        {
+            Debug.Log("Enemy Spawned");
             enemyTeam.Add(batSpr);
+        }
 
         combatants.Add(batSpr);
     }
@@ -87,7 +96,8 @@ public class BattleManager : MonoBehaviour
     void Update()
     {
         //used to determine if method is efficient or if coroutine is required
-        Debug.Log(Time.deltaTime);
+        if (testing) 
+            Debug.Log(Time.deltaTime);
         
         //check to pause
         checkPauseButton();

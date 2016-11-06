@@ -93,15 +93,17 @@ public class BattleEncounter : ScriptableObject
     /// </summary>
     public void spawnEnemies()
     {
-        Vector3 center = new Vector3(0f, 0f, 0f);
-        List<EncounterGroup> groups = new List<EncounterGroup>();
+        Vector3 center = new Vector3(-20f, -5f, 0f);
+        //List<EncounterGroup> groups = new List<EncounterGroup>();
 
         //generate groups
         foreach (EncGroupGenerator groupGen in groupGens)
         {
+            Debug.Log("Generating Group");
             EncounterGroup group = groupGen.generate();     //generate group
-            center.z += group.getRadius();                  //find center of group
+            center.z += group.Radius;                       //find center of group
             group.spawnGroup(center);                       //spawn around center
+            center.z += group.Radius;                       //move out of group radius
             center.z += 2f;                                 //space groups slightly
 
         }
@@ -118,59 +120,45 @@ public class BattleEncounter : ScriptableObject
         //List<Battler> allies = new List<Battler>();
 
         GameManager.inst.activeParty = new List<PlayableCharacter>();   //TEST LINE
-        GameManager.inst.activeParty.Add(new Kami());                   //TEST LINE
+        PlayableCharacter testPlayer = new Kami();                      //TEST LINE
+        GameManager.inst.activeParty.Add(testPlayer);                   //TEST LINE
 
-        List<PlayableCharacter> party = GameManager.inst.activeParty;
+        List<PlayableCharacter> party = GameManager.inst.activeParty;   //just quick reference, doesn't create playerTeam
 
         Vector3 frontPlacement = new Vector3();
-        frontPlacement.x = 20;
-        frontPlacement.y = -10;
+        frontPlacement.x = 15;
+        frontPlacement.y = -5;
         frontPlacement.z = 0;
 
         Vector3 backPlacement = new Vector3();
-        backPlacement.x = 30;
-        backPlacement.y = -10;
+        backPlacement.x = 25;
+        backPlacement.y = -5;
         backPlacement.z = 3;
 
         Vector3 airPlacement = new Vector3();
-        airPlacement.x = 25;
-        airPlacement.y = 0;
+        airPlacement.x = 20;
+        airPlacement.y = 5;
         airPlacement.z = 3;
 
         foreach (PlayableCharacter ally in party)
         {
-            //GameObject sprite = ally.Sprites.battleSprite;
-            //Battler copy;
 
             switch (ally.pos)
             {
                 case BattleManager.BattlePositions.FRONT:
-                    //copy = Instantiate(sprite, frontPlacement, Quaternion.identity) as Battler;
                     BattleManager.inst.spawnCombatant(ally, frontPlacement);
                     frontPlacement.z += 5;      //set placement
-                    //copy.pos = ally.pos;        //set position
-                    //copy.combatant = ally;      //set combatant
-                    //allies.Add(copy);           //add to list
                     break;
                 case BattleManager.BattlePositions.BACK:
-                    //copy = Instantiate(sprite, backPlacement, Quaternion.identity) as Battler;
                     BattleManager.inst.spawnCombatant(ally, backPlacement);
                     backPlacement.z += 5;       //set placement
-                    //copy.pos = ally.pos;        //set position
-                    //copy.combatant = ally;      //set combatant
-                    //allies.Add(copy);           //add to list
                     break;
                 case BattleManager.BattlePositions.AIR:
-                    //copy = Instantiate(sprite, airPlacement, Quaternion.identity) as Battler;
                     BattleManager.inst.spawnCombatant(ally, airPlacement);
                     airPlacement.z += 7;        //set placemnt
-                    //copy.pos = ally.pos;        //set position
-                    //copy.combatant = ally;      //set combatant
-                    //allies.Add(copy);           //add to list
                     break;
             }
         }
-        //return allies;
     }
 
     /* TEST: BattleManager.test_spawnEnemies()

@@ -63,7 +63,7 @@ public class PlayableCharacter : Character
     /// <returns>Enemy version of this playable character.</returns>
     public Character convToEnemy()
     {
-        return new Character(this.Name, this.baseStats, this.skillLVS, this.Sprites, false, this.pos);
+        return new Character(this.CharName, this.baseStats, this.skillLVS, this.Sprites, false, this.pos);
     }
 
 }
