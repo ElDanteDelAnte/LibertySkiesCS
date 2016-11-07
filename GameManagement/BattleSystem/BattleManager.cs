@@ -25,12 +25,14 @@ public class BattleManager : MonoBehaviour
         batCount = 0;
 
         //spawn enemies
+        /*
         Debug.Log("Spawning Enemies");
         encounter.spawnEnemies();
 
         //spawn party
         Debug.Log("Spawning Party");
         encounter.spawnParty();
+        */
 
         //combine teams
         /*
@@ -65,6 +67,12 @@ public class BattleManager : MonoBehaviour
     {
         tickTimer = 0;
 
+        Debug.Log("Spawning Enemies");
+        encounter.spawnEnemies();
+
+        //spawn party
+        Debug.Log("Spawning Party");
+        encounter.spawnParty();
     }
 
     /// <summary>
