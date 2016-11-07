@@ -109,7 +109,7 @@ public class EncounterGroup
             }
 
             //generate enemy
-            Debug.Log("Destination: " + destination.x + ", " + destination.y + ", " + destination.z);
+            //Debug.Log("Destination: " + destination.x + ", " + destination.y + ", " + destination.z);
             enGen.generate(destination);
         }
 

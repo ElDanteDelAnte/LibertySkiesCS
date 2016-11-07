@@ -87,13 +87,13 @@ public class BattleManager : MonoBehaviour
         //add to team lists
         if (comb.Allied)
         {
-            Debug.Log("Ally Spawned");
+            Debug.Log("Ally Spawned: " + batSpr.batID);
             //batSpr.AddComponent<AggroDisplay>();
             playerTeam.Add(batSpr);
         }
         else
         {
-            Debug.Log("Enemy Spawned");
+            Debug.Log("Enemy Spawned: " + batSpr.batID);
             enemyTeam.Add(batSpr);
         }
 
