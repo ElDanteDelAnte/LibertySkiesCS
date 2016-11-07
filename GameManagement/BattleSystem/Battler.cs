@@ -10,6 +10,7 @@ public class Battler : MonoBehaviour
     private Vector3 homePos;
     public Vector3 HomePos { get { return homePos; } }
     private Vector3 destPos;    //position the Battle Sprite is moving towards
+    private float speed;
 
     public int batID;           //ID of the Battler
 
@@ -37,6 +38,11 @@ public class Battler : MonoBehaviour
         this.allied = combatant.Allied; //set to corresponding team, possibly redundant
         homePos = transform.position;   //set "home" position to initial position
         this.pos = combatant.pos;       //set position, possibly redundant
+        destPos = HomePos;
+        speed = 0f;
+
+        ATBmax = 100;
+        ATBcount = 0;
     }
 
     /// <summary>
@@ -47,6 +53,7 @@ public class Battler : MonoBehaviour
     {
         bool able = true;
         //check, bump ATB
+        ATBcount += combatant.baseStats[(int)Character.Stats.AGILITY];
         //check, bump stam
         //inc buffs
         //passive effects
@@ -99,16 +106,17 @@ public class Battler : MonoBehaviour
     //TEST: Steping forward for combat
     void Update()
     {
-        transform.position = Vector3.MoveTowards(transform.position, destPos, 5 * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, destPos, speed * Time.deltaTime);
     }
 
     /// <summary>
     /// Linearly moves the battler sprite to a position on the battle field.
     /// </summary>
     /// <param name="posit">Position to move to.</param>
-    private void moveToPos(Vector3 posit)
+    private void moveToPos(Vector3 posit, float sp)
     {
-
+        destPos = posit;
+        speed = sp;
     }
 
     /// <summary>
@@ -116,7 +124,12 @@ public class Battler : MonoBehaviour
     /// </summary>
     public void stepForward()
     {
+        float distance = 10;    //abs. val. distance
 
+        distance = (allied) ? -distance : distance;     //direction based on team
+
+        Vector3 dest = new Vector3(HomePos.x + distance, HomePos.y, HomePos.z); //actual destination
+        moveToPos(dest, 5f);
     }
 
     /// <summary>
@@ -124,7 +137,7 @@ public class Battler : MonoBehaviour
     /// </summary>
     public void toHomePos()
     {
-
+        moveToPos(HomePos, 5f);
     }
 
     //post-battle operations

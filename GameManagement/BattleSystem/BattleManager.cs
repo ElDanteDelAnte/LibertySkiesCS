@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 public class BattleManager : MonoBehaviour
@@ -56,10 +57,13 @@ public class BattleManager : MonoBehaviour
     private bool actionInterrupt = false;
     private bool stillFighting = true;
 
+    private int tickTimer;
+    private int tickInc = 80;
+
 
 	public void Start()
     {
-        
+        tickTimer = 0;
 
     }
 
@@ -109,7 +113,13 @@ public class BattleManager : MonoBehaviour
 	    //if unpaused by the player and uninterrupted by action
         if (!(playerPaused || actionInterrupt))
         {
-            tickCombat();
+            //bump tick counter
+            tickTimer++;
+            if (tickTimer > tickInc)
+            {
+                tickTimer = 0;
+                tickCombat();
+            }
         }// end pause check
 
     }
@@ -133,8 +143,9 @@ public class BattleManager : MonoBehaviour
             {
                 if (ready)
                 {
-                    runAction(bat.intendedAction);              //perform action
-                    bat.intendedAction = bat.nextAction();      //determine next action
+                    StartCoroutine(runAction(bat.intendedAction));              //perform action
+                    //bat.intendedAction = bat.nextAction();      //determine next action
+                    bat.intendedAction = null;                  //mark as executed
                 }
             }
             else //cancel action
@@ -149,17 +160,27 @@ public class BattleManager : MonoBehaviour
     /// <summary>
     /// Performs a Battler's action.
     /// </summary>
-    private void runAction(BattleAction action)
+    private IEnumerator runAction(BattleAction action)
     {
         actionInterrupt = true;     //soft pause
+        action.User.ATBcount = 0;   //reset ATBcount
+        //deduct cost from user
+        yield return null;          //end frame
 
         Debug.Log(action.User + "'s turn.");
 
-        //deduct cost from user
+        yield return new WaitForSeconds(1f);
+
+        action.User.stepForward();  //step forward
 
         action.act();               //perform action
 
+        yield return new WaitForSeconds(2f);
+
+        action.User.toHomePos();    //step back
+
         actionInterrupt = false;    //resume
+        yield return null;
     }
 
     /// <summary>
