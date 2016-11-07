@@ -60,7 +60,7 @@ public class BattleManager : MonoBehaviour
     private bool stillFighting = true;
 
     private int tickTimer;
-    private int tickInc = 80;
+    public int tickInc = 50;
 
 
 	public void Start()
@@ -125,6 +125,7 @@ public class BattleManager : MonoBehaviour
             tickTimer++;
             if (tickTimer > tickInc)
             {
+                Debug.Log("Combat Tick"); 
                 tickTimer = 0;
                 tickCombat();
             }
@@ -170,22 +171,22 @@ public class BattleManager : MonoBehaviour
     /// </summary>
     private IEnumerator runAction(BattleAction action)
     {
-        actionInterrupt = true;     //soft pause
+        //actionInterrupt = true;     //soft pause
         action.User.ATBcount = 0;   //reset ATBcount
         //deduct cost from user
         yield return null;          //end frame
 
-        Debug.Log(action.User + "'s turn.");
-
-        yield return new WaitForSeconds(1f);
+        Debug.Log(action.User.batID + "'s turn.");
 
         action.User.stepForward();  //step forward
 
+        yield return new WaitForSeconds(0.5f);
+
         action.act();               //perform action
 
-        yield return new WaitForSeconds(2f);
-
         action.User.toHomePos();    //step back
+
+        yield return new WaitForSeconds(1f);
 
         actionInterrupt = false;    //resume
         yield return null;

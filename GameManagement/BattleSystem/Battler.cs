@@ -51,6 +51,7 @@ public class Battler : MonoBehaviour
     /// <returns>True if the combatant is ready and able to take an action.</returns>
     public bool tick()
     {
+        //Debug.Log("Ticking: " + batID);
         bool able = true;
         //check, bump ATB
         ATBcount += combatant.baseStats[(int)Character.Stats.AGILITY];
@@ -72,7 +73,9 @@ public class Battler : MonoBehaviour
         /* TEST AI */
         if (allied)     //for Kami
         {
-            int targ = Random.Range(0, BattleManager.inst.EnemyTeam.Capacity);
+            //Debug.Log("Kami Selecting Action");
+            int targ = Random.Range(0, BattleManager.inst.EnemyTeam.Count);
+            //Debug.Log("Kami Target: " + targ);
             singTarg.Add(BattleManager.inst.EnemyTeam[targ]);
             return new TestAttackAction(this, singTarg);
         }
@@ -80,10 +83,12 @@ public class Battler : MonoBehaviour
         //else          //for enemies
         if (pos == BattleManager.BattlePositions.FRONT)     //fighters attack Kami
         {
+            Debug.Log("Fighter Selecting Action");
             singTarg.Add(BattleManager.inst.PlayerTeam[0]);
             return new TestAttackAction(this, singTarg);
         }
 
+        Debug.Log("Healer Selecting Action");
         //else          //for back row (healers)
         List<Battler> frontEnemies = new List<Battler>();   //enemies in the front row
 
@@ -97,7 +102,9 @@ public class Battler : MonoBehaviour
         }
 
         //select from targets
-        int healTarg = Random.Range(0, frontEnemies.Capacity);
+        //Debug.Log("Front Enemies: " + frontEnemies.Count);
+        int healTarg = Random.Range(0, frontEnemies.Count);
+        //Debug.Log("Heal Target: " + healTarg);
         singTarg.Add(frontEnemies[healTarg]);
 
         return new TestHealAction(this, singTarg);
@@ -129,7 +136,7 @@ public class Battler : MonoBehaviour
         distance = (allied) ? -distance : distance;     //direction based on team
 
         Vector3 dest = new Vector3(HomePos.x + distance, HomePos.y, HomePos.z); //actual destination
-        moveToPos(dest, 5f);
+        moveToPos(dest, 50f);
     }
 
     /// <summary>
@@ -137,7 +144,7 @@ public class Battler : MonoBehaviour
     /// </summary>
     public void toHomePos()
     {
-        moveToPos(HomePos, 5f);
+        moveToPos(HomePos, 50f);
     }
 
     //post-battle operations
