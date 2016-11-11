@@ -53,18 +53,20 @@ public class BattleManager : MonoBehaviour
     public List<Battler> EnemyTeam { get { return enemyTeam; } }
     public List<Battler> PlayerTeam { get { return playerTeam; } }
     public List<Battler> Combatants { get { return combatants; } }
-    
+
     //battle flow control fields
-    private bool playerPaused = false;
-    private bool actionInterrupt = false;
+    public bool playerPaused;
+    public bool actionInterrupt = false;
     private bool stillFighting = true;
+    private Queue<BattleAction> actQue = new Queue<BattleAction>();
 
     private int tickTimer;
-    public int tickInc = 50;
+    public int tickInc = 20;
 
 
 	public void Start()
     {
+        playerPaused = false;
         tickTimer = 0;
 
         Debug.Log("Spawning Enemies");
@@ -121,20 +123,30 @@ public class BattleManager : MonoBehaviour
 	    //if unpaused by the player and uninterrupted by action
         if (!(playerPaused || actionInterrupt))
         {
-            //bump tick counter
-            tickTimer++;
-            if (tickTimer > tickInc)
+            //if action queued
+            if (actQue.Count > 0)
+                runAction(actQue.Dequeue());
+            
+            //queue empty
+            else
             {
-                Debug.Log("Combat Tick"); 
-                tickTimer = 0;
-                tickCombat();
-            }
-        }// end pause check
+                //bump combat tick
+                tickTimer++;
+                if (tickTimer > tickInc)
+                {
+                    Debug.Log("Combat Tick");
+                    tickTimer = 0;
+                    tickCombat();
+                }//end tick
+            }//end bump
 
-    }
+        }//end pause/interrupt check
+
+    }//end Update
 
     /// <summary>
-    /// Increments all combatants' ATB if able, and performs intended action if able.
+    /// <para>Increments all combatants' ATB if able, and performs intended action if able.</para>
+    /// <para>Only to occur when there are no more actions to be taken.</para>
     /// </summary>
     private void tickCombat()
     {
@@ -152,44 +164,35 @@ public class BattleManager : MonoBehaviour
             {
                 if (ready)
                 {
-                    StartCoroutine(runAction(bat.intendedAction));              //perform action
-                    //bat.intendedAction = bat.nextAction();      //determine next action
-                    bat.intendedAction = null;                  //mark as executed
+                    Debug.Log("Action Queued");
+                    actQue.Enqueue(bat.intendedAction);         //queue action
+
+                    bat.intendedAction = null;                  //mark as queued
                 }
+                //able but unready: wait to be ready 
             }
             else //cancel action
             {
-                //determine next action
-                bat.intendedAction = bat.nextAction();
+                Debug.Log("Action Cancelled");
+                bat.intendedAction = null;                      //will decide action on next tick
             }
             
         }
     }
 
     /// <summary>
-    /// Performs a Battler's action.
+    /// <para>Performs a Battler's action.</para>
+    /// <para>Assumes the action has been valid up until immediately before this call.</para>
     /// </summary>
-    private IEnumerator runAction(BattleAction action)
+    private void runAction(BattleAction action)
     {
-        //actionInterrupt = true;     //soft pause
+        actionInterrupt = true;     //only one action at a time
         action.User.ATBcount = 0;   //reset ATBcount
         //deduct cost from user
-        yield return null;          //end frame
 
-        Debug.Log(action.User.batID + "'s turn.");
+        Debug.Log(action.User.batID + "'s turn.");  //will be changed to action-specific log
 
-        action.User.stepForward();  //step forward
-
-        yield return new WaitForSeconds(0.5f);
-
-        action.act();               //perform action
-
-        action.User.toHomePos();    //step back
-
-        yield return new WaitForSeconds(1f);
-
-        actionInterrupt = false;    //resume
-        yield return null;
+        action.queueBehavior();
     }
 
     /// <summary>

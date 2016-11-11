@@ -9,15 +9,15 @@ public class Battler : MonoBehaviour
     //the set point every Battler returns to after an animation
     private Vector3 homePos;
     public Vector3 HomePos { get { return homePos; } }
-    private Vector3 destPos;    //position the Battle Sprite is moving towards
-    private float speed;
+    //private Vector3 destPos;    //position the Battle Sprite is moving towards
+    //private float speed;
 
     public int batID;           //ID of the Battler
 
     //which team
     public bool allied;
-    
-    
+
+    private Queue<IBatBehavior> instructions;
 
     public BattleManager.BattlePositions pos;
 
@@ -38,11 +38,12 @@ public class Battler : MonoBehaviour
         this.allied = combatant.Allied; //set to corresponding team, possibly redundant
         homePos = transform.position;   //set "home" position to initial position
         this.pos = combatant.pos;       //set position, possibly redundant
-        destPos = HomePos;
-        speed = 0f;
+        //destPos = HomePos;
+        //speed = 0f;
 
         ATBmax = 100;
         ATBcount = 0;
+        instructions = new Queue<IBatBehavior>();
     }
 
     /// <summary>
@@ -113,23 +114,49 @@ public class Battler : MonoBehaviour
     //TEST: Steping forward for combat
     void Update()
     {
-        transform.position = Vector3.MoveTowards(transform.position, destPos, speed * Time.deltaTime);
+        //if unpaused and behavior queue not empty
+        if (!(BattleManager.inst.playerPaused || instructions.Count == 0))
+        {
+            IBatBehavior currBehav = instructions.Peek();
+
+            //check if action is done
+            if (currBehav.isDone())
+            {
+                Debug.Log("Next Behavior");
+                instructions.Dequeue();
+            }
+
+            else    //perform behavior
+                currBehav.act();
+                
+        }   //if paused or queue empty
+
+        //do nothing
+    }
+
+    /// <summary>
+    /// Gives the battle sprite a sequence of behavior instructions to be carried out over the next several frames.
+    /// </summary>
+    /// <param name="inst">The set of instructions.</param>
+    public void instruct(Queue<IBatBehavior> inst)
+    {
+        instructions = inst;
     }
 
     /// <summary>
     /// Linearly moves the battler sprite to a position on the battle field.
     /// </summary>
     /// <param name="posit">Position to move to.</param>
-    private void moveToPos(Vector3 posit, float sp)
+    /*private void moveToPos(Vector3 posit, float sp)
     {
         destPos = posit;
         speed = sp;
-    }
+    }*/
 
     /// <summary>
     /// Linearly moves the battler sprite a set distance forward on the battlefield.
     /// </summary>
-    public void stepForward()
+    /*public void stepForward()
     {
         float distance = 10;    //abs. val. distance
 
@@ -137,15 +164,15 @@ public class Battler : MonoBehaviour
 
         Vector3 dest = new Vector3(HomePos.x + distance, HomePos.y, HomePos.z); //actual destination
         moveToPos(dest, 50f);
-    }
+    }*/
 
     /// <summary>
     /// Returns the battler sprite to its home position on the battlefield with linear movement.
     /// </summary>
-    public void toHomePos()
+    /*public void toHomePos()
     {
         moveToPos(HomePos, 50f);
-    }
+    }*/
 
     //post-battle operations
 }
